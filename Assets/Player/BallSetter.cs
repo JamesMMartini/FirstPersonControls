@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BallSetter : MonoBehaviour
 {
+    [SerializeField] SetManager setManager;
     [SerializeField] Projectile ball;
     [SerializeField] float maxSetAngle;
     [SerializeField] float maxSetTimer;
@@ -25,6 +26,8 @@ public class BallSetter : MonoBehaviour
 
             if (setTimer <= 0)
             {
+                setManager.StartSet();
+
                 // Launch the ball
                 float randomAngle = Random.Range(-maxSetAngle, maxSetAngle);
 

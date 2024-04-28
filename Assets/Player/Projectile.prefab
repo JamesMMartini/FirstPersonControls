@@ -102,8 +102,11 @@ MonoBehaviour:
   speed: 50
   shotTimer: 2
   gravity: 0.1
-  bounceLoss: 0.4
+  bounceLoss: 0.3
   hitSFX: {fileID: 8181074856995260916}
+  projectileMask:
+    serializedVersion: 2
+    m_Bits: 833
 --- !u!135 &3699219706623916938
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -8,6 +8,7 @@ public class LaunchProjectile : MonoBehaviour
     [SerializeField] GameObject projectilePrefab;
     [SerializeField] float slowdown;
     MouseLook mouseLook;
+    BaseCameraFollow camFollow;
 
     float baseFixedDeltaTime;
     bool projectileTriggered;
@@ -19,6 +20,7 @@ public class LaunchProjectile : MonoBehaviour
     {
         baseFixedDeltaTime = Time.fixedDeltaTime;
         mouseLook = GetComponent<MouseLook>();
+        camFollow = GameObject.FindObjectOfType<BaseCameraFollow>();
     }
 
     // Update is called once per frame
@@ -34,11 +36,13 @@ public class LaunchProjectile : MonoBehaviour
             Time.timeScale = slowdown;
             Time.fixedDeltaTime = baseFixedDeltaTime * slowdown;
 
-            if (mouseLook.ball != null)
-            {
-                mouseLook.LookAtObject(mouseLook.ball.position, mouseLook.ball);
-                mouseLook.SetJumpStartRot();
-            }
+            camFollow.StartTargetMode();
+
+            //if (mouseLook.ball != null)
+            //{
+            //    mouseLook.LookAtObject(mouseLook.ball.position, mouseLook.ball);
+            //    mouseLook.SetJumpStartRot();
+            //}
 
             //projectileTriggered = true;
 
@@ -49,9 +53,13 @@ public class LaunchProjectile : MonoBehaviour
             Time.timeScale = 1f;
             Time.fixedDeltaTime = baseFixedDeltaTime;
 
-            mouseLook.HitBall();
+            //mouseLook.HitBall();
 
-            mouseLook.ball = null;
+            //camFollow.StopTargetMode();
+
+            camFollow.HitBall();
+
+            //mouseLook.ball = null;
         }
     }
 }

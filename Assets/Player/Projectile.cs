@@ -17,6 +17,7 @@ public class Projectile : MonoBehaviour
     float timer;
     Vector3 gravityVec;
     bool wasHit;
+    bool targetHit;
 
     // Start is called before the first frame update
     void Start()
@@ -40,8 +41,16 @@ public class Projectile : MonoBehaviour
                 moveSpeed *= bounceLoss;
                 gravityVec.y = 0f;
 
+                TargetController target = hit.collider.GetComponent<TargetController>();
+                if (target != null && !targetHit)
+                {
+                    targetHit = true;
+                    target.Hit();
+                }
+
                 if (wasHit)
                 {
+                    GameObject.FindObjectOfType<BaseCameraFollow>().StopTargetMode();
                     wasHit = false;
                     hitSFX.Play();
                 }
@@ -78,6 +87,7 @@ public class Projectile : MonoBehaviour
             moveSpeed = speed * speedMod;
             gravityVec = Vector3.zero;
             wasHit = true;
+            targetHit = false;
         }
     }
 

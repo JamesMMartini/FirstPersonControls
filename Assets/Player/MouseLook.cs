@@ -69,19 +69,11 @@ public class MouseLook : MonoBehaviour
             if (!dropShadow.activeInHierarchy)
                 dropShadow.SetActive(true);
 
-            //LookAtObject(lookTarget, ball);
+            LookAtObject(ball.position, ball);
 
             float moddedXRot = xRotation - lookY * maxShotLookOffset;
 
-            if (inputActions.currentControlScheme != "Keyboard&Mouse")
-            {
-                cameraHolder.localRotation = Quaternion.Euler(moddedXRot, 0, 0);
-            }
-            else
-            {
-                storedModdedXRot += moddedXRot;
-                cameraHolder.localRotation = Quaternion.Euler(moddedXRot, 0, 0);
-            }
+            cameraHolder.localRotation = Quaternion.Euler(moddedXRot, 0, 0);
 
             // x rotation: up/down
             //xRotation -= (inputVerticalThisFrame * 50f);
@@ -90,18 +82,8 @@ public class MouseLook : MonoBehaviour
 
             //cameraHolder.localRotation = Quaternion.Euler(xRotation, 0, 0);
 
-            // y rotation: left/right
-            if (inputActions.currentControlScheme != "Keyboard&Mouse")
-            {
-                Vector3 newRot = new Vector3(0f, jumpStartYRot + (lookX * maxShotLookOffset), 0f);
-                transform.rotation = Quaternion.Euler(newRot);
-            }
-            else
-            {
-                storedModdedYRot += (lookX * maxShotLookOffset);
-                Vector3 newRot = new Vector3(0f, jumpStartYRot + storedModdedYRot, 0f);
-                transform.rotation = Quaternion.Euler(newRot);
-            }
+            Vector3 newRot = new Vector3(0f, jumpStartYRot + (lookX * maxShotLookOffset), 0f);
+            transform.rotation = Quaternion.Euler(newRot);
 
             //transform.Rotate(Vector3.up, (inputHorizontalThisFrame * 50f));
 
@@ -124,7 +106,7 @@ public class MouseLook : MonoBehaviour
             }
             else
             {
-                ballMat.color = new Color(1 - (distToBall /maxHitDistance), 0f, 0f);
+                ballMat.color = new Color(1 - (distToBall / maxHitDistance), 0f, 0f);
             }
 
             //transform.Rotate(Vector3.up, lookY);
@@ -159,6 +141,8 @@ public class MouseLook : MonoBehaviour
 
             hitSFX.Play();
             ball.GetComponent<Projectile>().Fire(direction, hitForce);
+
+            ball = null;
         }
     }
 
@@ -181,7 +165,7 @@ public class MouseLook : MonoBehaviour
         if (ballMat == null)
             ballMat = ball.GetComponent<MeshRenderer>().material;
 
-        Vector3 lookDir = target - cameraHolder.position;
+        Vector3 lookDir = (target - cameraHolder.position).normalized;
 
         Quaternion lookRot = Quaternion.LookRotation(lookDir);
         Vector3 lookVec = lookRot.eulerAngles;
@@ -191,6 +175,8 @@ public class MouseLook : MonoBehaviour
         cameraHolder.localRotation = Quaternion.Euler(xRotation, 0, 0);
 
         transform.rotation = Quaternion.Euler(new Vector3(0f, lookVec.y, 0f));
+
+        SetJumpStartRot();
     }
 
     public void Look(InputAction.CallbackContext context)
