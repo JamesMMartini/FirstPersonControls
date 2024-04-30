@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class BaseCameraFollow : MonoBehaviour
 {
@@ -250,7 +251,20 @@ public class BaseCameraFollow : MonoBehaviour
             hitSFX.Play();
             Ball.GetComponent<Projectile>().Fire(direction, hitForce);
 
+            StartCoroutine(TriggerRumble(hitForce));
+
             zooming = true;
         }
+    }
+
+    IEnumerator TriggerRumble(float intensity)
+    {
+        // apply controller vibration
+        Gamepad.current.SetMotorSpeeds(intensity, intensity);
+
+        yield return new WaitForSeconds(0.2f);
+
+        // apply controller vibration
+        Gamepad.current.SetMotorSpeeds(0f, 0f);
     }
 }

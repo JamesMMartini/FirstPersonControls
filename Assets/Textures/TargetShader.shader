@@ -1,18 +1,14 @@
+// This shader visuzlizes the normal vector values on the mesh.
 Shader "Custom/TargetShader"
 {
-    // The _BaseMap variable is visible in the Material's Inspector, as a field
-    // called Base Map.
     Properties
     {
         _Color1("Color", Color) = (0, 0, 0, 1)
-
-        //_BaseMap("Base Map", 2D) = "white"
-        //_Offset("Offset", Float) = 0.0
     }
 
-        SubShader
+    SubShader
     {
-        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalRenderPipeline" }
+        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" }
 
         Pass
         {
@@ -20,7 +16,7 @@ Shader "Custom/TargetShader"
             #pragma vertex vert
             #pragma fragment frag
 
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"            
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
             struct Attributes
             {
@@ -38,12 +34,12 @@ Shader "Custom/TargetShader"
                 float2 uv           : TEXCOORD0;
             };
 
+            float4 _Color1;
+
             float nrand(float2 uv)
             {
                 return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
             }
-
-            float4 _Color1;
 
             Varyings vert(Attributes IN)
             {
@@ -51,6 +47,7 @@ Shader "Custom/TargetShader"
                 OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
                 // The TRANSFORM_TEX macro performs the tiling and offset
                 // transformation.
+                //OUT.uv = TRANSFORM_TEX(IN.uv, _BaseMap);
                 OUT.uv = float2(IN.uv.x, IN.uv.y);
                 return OUT;
             }
@@ -69,13 +66,6 @@ Shader "Custom/TargetShader"
                         clip(-1);
                 }
 
-                // The SAMPLE_TEXTURE2D marco samples the texture with the given
-                // sampler.
-
-                //IN.uv.y = IN.uv.y + offset;
-                //IN.uv.y = IN.uv.y + ((_Time[1] / 5) + (nrand(IN.uv) / 30));
-
-                //half4 color = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv);
                 return _Color1;
             }
             ENDHLSL

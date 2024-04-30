@@ -6,6 +6,8 @@ public class TargetController : MonoBehaviour
 {
     [SerializeField] int pointValue;
     [SerializeField] SetManager setManager;
+    [SerializeField] AudioClip pointAlert;
+    [SerializeField] AudioSource hitSFX;
 
     //private void OnTriggerEnter(Collider other)
     //{
@@ -21,6 +23,7 @@ public class TargetController : MonoBehaviour
     {
         if (pointValue > 0)
         {
+            hitSFX.PlayOneShot(pointAlert, 0.5f);
             setManager.AddPoints(pointValue);
         }
     }
